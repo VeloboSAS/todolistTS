@@ -22,8 +22,14 @@ type PropsType = {
     isDone: boolean,
     todolistId: string
   ) => void;
+  changeTaskTitle: (
+    taskId: string,
+    newTitle: string,
+    todolistId: string
+  ) => void;
   filter: FilterValuesType;
   removeTodolist: (todolistId: string) => void;
+  changeTodolistTitle:(todolidtId: string, newTitle: string) => void
 };
 
 export function Todolist(props: PropsType) {
@@ -44,6 +50,10 @@ export function Todolist(props: PropsType) {
     props.removeTodolist(props.id);
   };
 
+  const changeTodolistTitle = (newTitle: string) => {
+    props.changeTodolistTitle(props.id, newTitle);
+  };
+
   const addTask = (title: string) => {
 
     props.addItem(title, props.id)
@@ -52,7 +62,7 @@ export function Todolist(props: PropsType) {
   return (
     <div>
       <h3>
-        {props.title}{" "}
+        <EditableSpan title={props.title} onChange={changeTodolistTitle}/>
         <button onClick={removeTodolist} className={s.btn}>
           Delete Todolist
         </button>
@@ -63,17 +73,21 @@ export function Todolist(props: PropsType) {
           const deleteTask = () => {
             props.removeTask(task.id, props.id);
           };
-          const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+          const onChangeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
             props.changeTaskStatus(task.id, e.currentTarget.checked, props.id);
+          };
+
+          const onChangeTitleHandler = (newValue: string) => {
+            props.changeTaskTitle(task.id, newValue, props.id);
           };
           return (
             <li key={task.id} className={task.isDone ? s.isDone : ""}>
               <input
                 type="checkbox"
-                onChange={onChangeHandler}
+                onChange={onChangeStatusHandler}
                 checked={task.isDone}
               />
-              <EditableSpan title={task.title}/>
+              <EditableSpan title={task.title} onChange={onChangeTitleHandler}/>
               <button onClick={deleteTask} className={s.btn}>
                 Delete
               </button>
