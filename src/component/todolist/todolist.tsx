@@ -1,4 +1,10 @@
-import React, { ChangeEvent } from "react";
+import {
+  Button,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import React, { ChangeEvent, useState } from "react";
 import { FilterValuesType } from "../../App";
 import { AddItemForm } from "../addItemForm";
 import { EditableSpan } from "../editableSpan";
@@ -29,11 +35,10 @@ type PropsType = {
   ) => void;
   filter: FilterValuesType;
   removeTodolist: (todolistId: string) => void;
-  changeTodolistTitle:(todolidtId: string, newTitle: string) => void
+  changeTodolistTitle: (todolidtId: string, newTitle: string) => void;
 };
 
 export function Todolist(props: PropsType) {
-
   const onAllClickHandler = () => {
     props.changeFilter("all", props.id);
   };
@@ -55,19 +60,31 @@ export function Todolist(props: PropsType) {
   };
 
   const addTask = (title: string) => {
+    props.addItem(title, props.id);
+  };
 
-    props.addItem(title, props.id)
-  }
+  const [alignment, setAlignment] = useState("all");
+
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newAlignment: string
+  ) => {
+    setAlignment(newAlignment);
+  };
 
   return (
     <div>
       <h3>
-        <EditableSpan title={props.title} onChange={changeTodolistTitle}/>
-        <button onClick={removeTodolist} className={s.btn}>
-          Delete Todolist
-        </button>
+        <EditableSpan title={props.title} onChange={changeTodolistTitle} />
+        <Button
+          onClick={removeTodolist}
+          aria-label="delete"
+          size="large"
+          color="secondary"
+          startIcon={<DeleteIcon />}
+        ></Button>
       </h3>
-      <AddItemForm  AddItem={addTask}/>
+      <AddItemForm AddItem={addTask} />
       <ul>
         {props.tasks.map((task) => {
           const deleteTask = () => {
@@ -87,33 +104,48 @@ export function Todolist(props: PropsType) {
                 onChange={onChangeStatusHandler}
                 checked={task.isDone}
               />
-              <EditableSpan title={task.title} onChange={onChangeTitleHandler}/>
-              <button onClick={deleteTask} className={s.btn}>
-                Delete
-              </button>
+              <EditableSpan
+                title={task.title}
+                onChange={onChangeTitleHandler}
+              />
+              <Button
+                onClick={deleteTask}
+                aria-label="delete"
+                size="large"
+                color="secondary"
+                startIcon={<DeleteIcon />}
+              ></Button>
             </li>
           );
         })}
       </ul>
       <div>
-        <button
-          onClick={onAllClickHandler}
-          className={props.filter === "all" ? s.btnActive : s.btn}
+        <ToggleButtonGroup
+          color="secondary"
+          value={alignment}
+          exclusive
+          onChange={handleChange}
+          size="small"
         >
-          All
-        </button>
-        <button
-          onClick={onActiveClickHandler}
-          className={props.filter === "active" ? s.btnActive : s.btn}
-        >
-          Active
-        </button>
-        <button
-          onClick={onCompletedClickHandler}
-          className={props.filter === "completed" ? s.btnActive : s.btn}
-        >
-          Completed
-        </button>
+          <ToggleButton
+            onClick={onAllClickHandler}
+            value="all"
+          >
+            All
+          </ToggleButton>
+          <ToggleButton
+            onClick={onActiveClickHandler}
+            value="active"
+          >
+            Active
+          </ToggleButton>
+          <ToggleButton
+            onClick={onCompletedClickHandler}
+            value="completed"
+          >
+            Completed
+          </ToggleButton>
+        </ToggleButtonGroup>
       </div>
     </div>
   );

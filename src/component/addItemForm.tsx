@@ -1,10 +1,8 @@
+import { Button } from "@mui/material";
 import React, { ChangeEvent, useState, KeyboardEvent } from "react";
-// import s from "../todolist/todolist.module.css";
-import s from './todolist/todolist.module.css'
 
 export type AddItemFormTypes = {
-    AddItem: (title: string) => void;
-
+  AddItem: (title: string) => void;
 };
 
 export function AddItemForm(props: AddItemFormTypes) {
@@ -39,9 +37,15 @@ export function AddItemForm(props: AddItemFormTypes) {
         onKeyPress={onKeyPressHandler}
         className={error ? "error" : ""}
       />
-      <button onClick={AddTask} className={s.btn}>
+      <Button
+        onClick={AddTask}
+        variant="outlined"
+        size="small"
+        color="secondary"
+        style={{ margin: "10px" }}
+      >
         Add Task
-      </button>
+      </Button>
       {error && <div className="error-message">{error}</div>}
     </div>
   );
