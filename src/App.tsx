@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { v4 } from "uuid";
 import "./App.css";
-import { Todolist } from "./component/todolist/todolist";
+import { AddItemForm } from "./component/addItemForm";
+import { TaskType, Todolist } from "./component/todolist/todolist";
 
 export type FilterValuesType = "all" | "completed" | "active";
 
@@ -10,6 +11,10 @@ type TodolistType = {
   title: string;
   filter: FilterValuesType;
 };
+
+type TasksStateType = {
+  [key: string]: Array<TaskType>
+}
 
 function App() {
 
@@ -20,7 +25,7 @@ function App() {
     setTasks({...tasksObj});
   }
 
-  function addTask(title: string, todolistId: string) {
+  function AddItem(title: string, todolistId: string) {
     let newTask = { id: v4(), title: title, isDone: false };
     let tasks = tasksObj[todolistId]
     let newTasks = [newTask, ...tasks];
@@ -48,8 +53,8 @@ function App() {
   let todolistId2 = v4();
 
   let [todolists, setTodolist] = useState<Array<TodolistType>>([
-    { id: todolistId1, title: "What to learn", filter: "active" },
-    { id: todolistId2, title: "What to buy", filter: "completed" },
+    { id: todolistId1, title: "What to learn", filter: "all" },
+    { id: todolistId2, title: "What to buy", filter: "all" },
   ]);
 
   let removeTodolist = (todolistId: string) => {
@@ -59,7 +64,7 @@ function App() {
     setTasks({...tasksObj})
   }
  
-  let [tasksObj, setTasks] = useState({
+  let [tasksObj, setTasks] = useState<TasksStateType>({
     [todolistId1]: [
       { id: v4(), title: "CSS&HTML", isDone: true },
       { id: v4(), title: "JS", isDone: true },
@@ -74,8 +79,23 @@ function App() {
     ],
   });
 
+  function addTodolist(title: string) {
+    let todolist: TodolistType = {
+      id: v4(),
+      filter: "all",
+      title: title
+    }
+    setTodolist([todolist, ...todolists])
+    setTasks({
+      ...tasksObj,
+      [todolist.id]: []
+    })
+
+  }
+
   return (
     <div className="App">
+      <AddItemForm AddItem={addTodolist} />
       {todolists.map((tl) => {
         let tasksForTodoList = tasksObj[tl.id];
 
@@ -94,7 +114,7 @@ function App() {
             tasks={tasksForTodoList}
             removeTask={removeTask}
             changeFilter={changeFilter}
-            addTask={addTask}
+            addItem={AddItem}
             changeTaskStatus={changeStatus}
             filter={tl.filter}
             removeTodolist={removeTodolist}
