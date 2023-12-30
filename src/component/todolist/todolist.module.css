@@ -1,34 +1,4 @@
 
-.btn {
-  background-color: #8b008b;
-  color: white;
-  font-size: 16px;
-  border-radius: 4px;
-  margin: 5px;
-}
-
-.btn:hover {
-  background-color: white;
-  color: #8b008b;
-  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
-    0 17px 50px 0 rgba(0, 0, 0, 0.19);
-}
-
-.btnActive {
-  background-color: MediumPurple;
-  color: white;
-  font-size: 16px;
-  border-radius: 4px;
-  margin: 5px;
-}
-
-.btnActive:hover {
-  background-color: white;
-  color: #8b008b;
-  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
-    0 17px 50px 0 rgba(0, 0, 0, 0.19);
-}
-
 .isDone {
   opacity: 0.5;
 }

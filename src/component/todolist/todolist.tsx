@@ -1,10 +1,6 @@
-import {
-  Button,
-  ToggleButton,
-  ToggleButtonGroup,
-} from "@mui/material";
+import { Button, Checkbox } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent } from "react";
 import { FilterValuesType } from "../../App";
 import { AddItemForm } from "../addItemForm";
 import { EditableSpan } from "../editableSpan";
@@ -63,14 +59,7 @@ export function Todolist(props: PropsType) {
     props.addItem(title, props.id);
   };
 
-  const [alignment, setAlignment] = useState("all");
-
-  const handleChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newAlignment: string
-  ) => {
-    setAlignment(newAlignment);
-  };
+  const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   return (
     <div>
@@ -85,7 +74,7 @@ export function Todolist(props: PropsType) {
         ></Button>
       </h3>
       <AddItemForm AddItem={addTask} />
-      <ul>
+      <div>
         {props.tasks.map((task) => {
           const deleteTask = () => {
             props.removeTask(task.id, props.id);
@@ -98,11 +87,13 @@ export function Todolist(props: PropsType) {
             props.changeTaskTitle(task.id, newValue, props.id);
           };
           return (
-            <li key={task.id} className={task.isDone ? s.isDone : ""}>
-              <input
-                type="checkbox"
+            <div key={task.id} className={task.isDone ? s.isDone : ""}>
+              <Checkbox
                 onChange={onChangeStatusHandler}
                 checked={task.isDone}
+                {...label}
+                defaultChecked
+                color="secondary"
               />
               <EditableSpan
                 title={task.title}
@@ -115,37 +106,32 @@ export function Todolist(props: PropsType) {
                 color="secondary"
                 startIcon={<DeleteIcon />}
               ></Button>
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
       <div>
-        <ToggleButtonGroup
+        <Button
+          variant={props.filter === "all" ? "outlined" : "text"}
           color="secondary"
-          value={alignment}
-          exclusive
-          onChange={handleChange}
-          size="small"
+          onClick={onAllClickHandler}
         >
-          <ToggleButton
-            onClick={onAllClickHandler}
-            value="all"
-          >
-            All
-          </ToggleButton>
-          <ToggleButton
-            onClick={onActiveClickHandler}
-            value="active"
-          >
-            Active
-          </ToggleButton>
-          <ToggleButton
-            onClick={onCompletedClickHandler}
-            value="completed"
-          >
-            Completed
-          </ToggleButton>
-        </ToggleButtonGroup>
+          All
+        </Button>
+        <Button
+          onClick={onActiveClickHandler}
+          variant={props.filter === "active" ? "outlined" : "text"}
+          color="secondary"
+        >
+          Active
+        </Button>
+        <Button
+          onClick={onCompletedClickHandler}
+          variant={props.filter === "completed" ? "outlined" : "text"}
+          color="secondary"
+        >
+          Completed
+        </Button>
       </div>
     </div>
   );
