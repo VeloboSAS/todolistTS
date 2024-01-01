@@ -16,13 +16,13 @@ import { TaskType, Todolist } from "./component/todolist/todolist";
 
 export type FilterValuesType = "all" | "completed" | "active";
 
-type TodolistType = {
+export type TodolistType = {
   id: string;
   title: string;
   filter: FilterValuesType;
 };
 
-type TasksStateType = {
+export type TasksStateType = {
   [key: string]: Array<TaskType>;
 };
 
@@ -138,10 +138,9 @@ function App() {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            {/* <MenuIcon /> */}
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
+            To do List
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>

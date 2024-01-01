@@ -1,19 +1,15 @@
-/* .App {
-  padding: 30px;
-  display: flex;
-  justify-content: center;
-  background-color: Lavender;
-  min-height: 100vh;
-}
-
-.App > div {
-  margin: 50px;
-} */
-
 .error {
-  border: red 1px solid
+  border: red 1px solid;
 }
 
 .error-message {
-  color: red
+  color: red;
+}
+.App {
+  background-image: url("./component/image/top-view-international-worker-s-day-still-life.jpg");
+  min-height: 100vh;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
