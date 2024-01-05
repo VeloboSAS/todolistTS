@@ -28,17 +28,23 @@ export type TasksStateType = {
 
 function App() {
   function removeTask(id: string, todolistId: string) {
+    //достаём нужный массив по todolistId
     let tasks = tasksObj[todolistId];
+    //перезапишем в этом обьекте массив для нужного тудулиста отфильтрованным массивом
     let filteredTasks = tasks.filter((t) => t.id !== id);
     tasksObj[todolistId] = filteredTasks;
+    //засетаем в стейт копию обьекта, чтобы React отреагировал отрисовкой
     setTasks({ ...tasksObj });
   }
 
   function AddItem(title: string, todolistId: string) {
     let newTask = { id: v4(), title: title, isDone: false };
+    //достаём нужный массив по todolistId
     let tasks = tasksObj[todolistId];
+    // перезапишем в этом обьекте массив для нужного тудулиста копией, добавив в начало новую таску
     let newTasks = [newTask, ...tasks];
     tasksObj[todolistId] = newTasks;
+    //засетаем в стейт копию обьекта, чтобы React отреагировал отрисовкой
     setTasks({ ...tasksObj });
   }
 
@@ -60,8 +66,11 @@ function App() {
     newTitle: string,
     todolistId: string
   ) {
+    //достанем нужный массив по todolistId
     let tasks = tasksObj[todolistId];
+    //достанем нужную таску
     let task = tasks.find((t) => t.id === taskId);
+    // изменим таску, если она нашлась
     if (task) {
       task.title = newTitle;
     }
@@ -85,15 +94,20 @@ function App() {
   ]);
 
   let removeTodolist = (todolistId: string) => {
+    // засунем в стейт список тудулистов, id которых не равны тому, который нужно выкинуть
     let filteredTodolist = todolists.filter((tl) => tl.id !== todolistId);
     setTodolist(filteredTodolist);
-    delete tasksObj[todolistId];
+    //удалим таски для этого тудулиста из второго стейта, где мы храним отдельно таски
+    delete tasksObj[todolistId];// удаляем св-во из обьекта ... значением  которого является массив тасок
+    // засетаем в стейт копию обьекта, чтобы react отреагировал перертсовкой
     setTasks({ ...tasksObj });
   };
 
   let changeTodolistTitle = (todolistId: string, newTitle: string) => {
+    // найдем нужный todolist
     let todolist = todolists.find((tl) => tl.id === todolistId);
     if (todolist) {
+      // если нашелся - изменим ему заголовок
       todolist.title = newTitle;
       setTodolist([...todolists]);
     }
