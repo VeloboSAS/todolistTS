@@ -1,4 +1,4 @@
-import { FilterValuesType } from "./../../App";
+import { FilterValuesType } from "../../App";
 import {
   addTodolistAC,
   changeTodolistFilterAC,

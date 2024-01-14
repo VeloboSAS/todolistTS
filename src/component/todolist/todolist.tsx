@@ -5,6 +5,14 @@ import { FilterValuesType } from "../../App";
 import { AddItemForm } from "../addItemForm";
 import { EditableSpan } from "../editableSpan";
 import s from "./todolist.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { AppRootType } from "../state/store";
+import {
+  addTaskAC,
+  changeTaskStatusAC,
+  changeTaskTitleAC,
+  removeTaskAC,
+} from "../state/tasks-reducer";
 
 export type TaskType = {
   id: string;
@@ -15,26 +23,19 @@ export type TaskType = {
 type PropsType = {
   id: string;
   title: string;
-  tasks: Array<TaskType>;
-  removeTask: (id: string, todolistId: string) => void;
   changeFilter: (value: FilterValuesType, todolistId: string) => void;
-  addItem: (title: string, todolistId: string) => void;
-  changeTaskStatus: (
-    taskId: string,
-    isDone: boolean,
-    todolistId: string
-  ) => void;
-  changeTaskTitle: (
-    taskId: string,
-    newTitle: string,
-    todolistId: string
-  ) => void;
   filter: FilterValuesType;
   removeTodolist: (todolistId: string) => void;
   changeTodolistTitle: (todolidtId: string, newTitle: string) => void;
 };
 
 export function Todolist(props: PropsType) {
+  const dispatch = useDispatch();
+
+  const tasks = useSelector<AppRootType, Array<TaskType>>(
+    (state) => state.tasks[props.id]
+  );
+
   const onAllClickHandler = () => {
     props.changeFilter("all", props.id);
   };
@@ -55,11 +56,16 @@ export function Todolist(props: PropsType) {
     props.changeTodolistTitle(props.id, newTitle);
   };
 
-  const addTask = (title: string) => {
-    props.addItem(title, props.id);
-  };
-
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
+
+  let tasksForTodoList = tasks;
+
+  if (props.filter === "completed") {
+    tasksForTodoList = tasksForTodoList.filter((t) => t.isDone === true);
+  }
+  if (props.filter === "active") {
+    tasksForTodoList = tasksForTodoList.filter((t) => t.isDone === false);
+  }
 
   return (
     <div>
@@ -73,18 +79,30 @@ export function Todolist(props: PropsType) {
           startIcon={<DeleteIcon />}
         ></Button>
       </h3>
-      <AddItemForm AddItem={addTask} />
+      <AddItemForm
+        AddItem={(title) => {
+          const action = addTaskAC(title, props.id);
+          dispatch(action);
+        }}
+      />
       <div>
-        {props.tasks.map((task) => {
+        {tasksForTodoList.map((task) => {
           const deleteTask = () => {
-            props.removeTask(task.id, props.id);
+            const action = removeTaskAC(task.id, props.id);
+            dispatch(action);
           };
           const onChangeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-            props.changeTaskStatus(task.id, e.currentTarget.checked, props.id);
+            const action = changeTaskStatusAC(
+              task.id,
+              e.currentTarget.checked,
+              props.id
+            );
+            dispatch(action);
           };
 
           const onChangeTitleHandler = (newValue: string) => {
-            props.changeTaskTitle(task.id, newValue, props.id);
+            const action = changeTaskTitleAC(task.id, newValue, props.id);
+            dispatch(action);
           };
           return (
             <div key={task.id} className={task.isDone ? s.isDone : ""}>
