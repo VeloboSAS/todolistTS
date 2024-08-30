@@ -8,7 +8,6 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { Console, log } from "console";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import "./App.css";
@@ -34,10 +33,9 @@ export type TasksStateType = {
   [key: string]: Array<TaskType>;
 };
 
-function App() {
-
+function AppWithRedux() {
   
-  
+  console.log('App is called');
   const dispatch = useDispatch()
   const todolists = useSelector<AppRootType, Array<TodolistType>>(state => state.todolists)
 
@@ -108,4 +106,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppWithRedux;

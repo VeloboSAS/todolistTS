@@ -7,25 +7,29 @@ export type AddItemFormTypes = {
 };
 
 export function AddItemForm(props: AddItemFormTypes) {
-  const [newTaskTitle, setNewTaskTitle] = useState("");
+  console.log('AddItemform is called')
+  const [title, setTitle] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    setError(null);
+    if (error !== null) {
+      setError(null);
+    }
+  
     if (e.key === "Enter") {
-      props.AddItem(newTaskTitle);
-      setNewTaskTitle("");
+      props.AddItem(title);
+      setTitle("");
     }
   };
 
   const onNewTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewTaskTitle(e.currentTarget.value);
+    setTitle(e.currentTarget.value);
   };
 
   const AddTask = () => {
-    if (newTaskTitle.trim() !== "") {
-      props.AddItem(newTaskTitle.trim());
-      setNewTaskTitle("");
+    if (title.trim() !== "") {
+      props.AddItem(title.trim());
+      setTitle("");
     } else {
       setError("Title is required");
     }
@@ -33,7 +37,7 @@ export function AddItemForm(props: AddItemFormTypes) {
   return (
     <div>
       <TextField
-        value={newTaskTitle}
+        value={title}
         onChange={onNewTitleChangeHandler}
         onKeyPress={onKeyPressHandler}
         error={!!error}
